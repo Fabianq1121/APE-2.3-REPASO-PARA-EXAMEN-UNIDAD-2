@@ -1,0 +1,82 @@
+<!-- inventario/templates/inventario/detalle_equipo.html -->
+{% extends 'inventario/base.html' %}
+
+{% block title %}Detalle de Equipo - GESINFRA{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1>Detalle del Equipo</h1>
+        <a href="{% url 'inventario:listar_equipos' %}" class="btn">← Volver al Listado</a>
+    </div>
+    
+    <div style="background: white; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; margin-bottom: 30px;">
+            <div style="font-size: 3rem; margin-right: 20px;">🖥️</div>
+            <div>
+                <h2 style="margin-bottom: 5px;">{{ equipo.descripcion }}</h2>
+                <span class="badge badge-{{ equipo.estado }}" style="font-size: 1rem;">
+                    {{ equipo.get_estado_display }}
+                </span>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div class="info-card">
+                <h3>📋 Información General</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><strong>Número de Inventario:</strong> {{ equipo.numero_inventario }}</li>
+                    <li><strong>Descripción:</strong> {{ equipo.descripcion }}</li>
+                    <li><strong>Precio de Adquisición:</strong> ${{ equipo.precio_adquisicion }}</li>
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h3>👤 Responsable</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><strong>Usuario:</strong> {{ equipo.usuario_responsable.username }}</li>
+                    <li><strong>Nombre:</strong> {{ equipo.usuario_responsable.get_full_name|default:"No especificado" }}</li>
+                    <li><strong>Email:</strong> {{ equipo.usuario_responsable.email|default:"No especificado" }}</li>
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h3>📅 Registro</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li><strong>Fecha de Registro:</strong> {{ equipo.fecha_registro|date:"d/m/Y H:i" }}</li>
+                    <li><strong>Registrado hace:</strong> {{ equipo.fecha_registro|timesince }}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee;">
+            <h3>⚙️ Acciones</h3>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <a href="#" class="btn" style="background: #3498db;">Editar</a>
+                <a href="#" class="btn" style="background: #e74c3c;">Eliminar</a>
+                <a href="{% url 'inventario:listar_equipos' %}" class="btn">Volver al Listado</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.info-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+.info-card h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+.info-card li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+.info-card li:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

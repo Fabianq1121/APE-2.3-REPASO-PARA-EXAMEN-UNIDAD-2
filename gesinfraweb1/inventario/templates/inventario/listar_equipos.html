@@ -1,0 +1,74 @@
+<!-- inventario/templates/inventario/listar_equipos.html -->
+{% extends 'inventario/base.html' %}
+
+{% block title %}Lista de Equipos - GESINFRA{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h1>Inventario de Equipos</h1>
+    <a href="{% url 'inventario:crear_equipo' %}" class="btn btn-success">➕ Nuevo Equipo</a>
+</div>
+
+<div style="margin-bottom: 20px;">
+    <h3>Filtrar por estado:</h3>
+    <a href="{% url 'inventario:listar_equipos' %}" class="btn">Todos</a>
+    <a href="?estado=activo" class="btn">Activos</a>
+    <a href="?estado=inactivo" class="btn">Inactivos</a>
+    <a href="?estado=mantenimiento" class="btn">En Mantenimiento</a>
+    <a href="?estado=baja" class="btn">Dados de Baja</a>
+</div>
+
+<p style="margin-bottom: 20px; font-size: 1.1rem;">
+    <strong>Total de equipos:</strong> {{ total_equipos }}
+    {% if filtro_estado %}
+        <span class="badge badge-{{ filtro_estado }}" style="margin-left: 10px;">
+        {% if filtro_estado == 'activo' %}Activos
+        {% elif filtro_estado == 'inactivo' %}Inactivos
+        {% elif filtro_estado == 'mantenimiento' %}En Mantenimiento
+        {% elif filtro_estado == 'baja' %}Dados de Baja
+        {% endif %}
+        </span>
+    {% endif %}
+</p>
+
+{% if equipos %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>N° Inventario</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Responsable</th>
+                <th>Fecha Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for equipo in equipos %}
+            <tr>
+                <td><strong>{{ equipo.numero_inventario }}</strong></td>
+                <td>{{ equipo.descripcion }}</td>
+                <td>${{ equipo.precio_adquisicion }}</td>
+                <td>
+                    <span class="badge badge-{{ equipo.estado }}">
+                        {{ equipo.get_estado_display }}
+                    </span>
+                </td>
+                <td>{{ equipo.usuario_responsable.username }}</td>
+                <td>{{ equipo.fecha_registro|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'inventario:detalle_equipo' equipo.id %}" class="btn">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 8px;">
+        <h3>No hay equipos registrados</h3>
+        <p>Comienza agregando tu primer equipo al inventario.</p>
+        <a href="{% url 'inventario:crear_equipo' %}" class="btn btn-success">Crear Primer Equipo</a>
+    </div>
+{% endif %}
+{% endblock %}
